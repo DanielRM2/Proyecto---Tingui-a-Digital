@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Contacto y Atención Ciudadana — La Tinguiña Digital</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            body: ['"Inter"', 'sans-serif'],
+            serif: ['"DM Serif Display"', 'serif'],
+          },
+          colors: {
+            brand: {
+              navy: '#0f172a',
+              sky: '#0284c7',
+              skyHover: '#0369a1',
+              cyan: '#00b4d8',
+              amber: '#f59e0b',
+              amberDark: '#d97706',
+              bgLight: '#f8faff',
+              surface: '#ffffff',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Subrayado animado de izquierda a derecha en enlaces de navegación (idéntico al Home) */
+    .nav-item-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 0.25rem;
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .nav-item-link:hover {
+      color: #020617;
+    }
+    .nav-item-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2.5px;
+      background-color: #0ea5e9;
+      border-radius: 9999px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-item-link:hover::after,
+    .nav-item-link.active::after {
+      width: 100%;
+    }
+    .nav-item-link.active {
+      color: #020617;
+      font-weight: 700;
+    }
+
+    /* Subrayado animado y efecto hover azul en botón Mesa de Partes */
+    .btn-mesa-partes {
+      transition: all 0.25s ease;
+    }
+    .btn-mesa-partes:hover {
+      background-color: #0284c7 !important;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+    .btn-mesa-partes.active {
+      background-color: #0284c7 !important;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+    .btn-mesa-partes.active:hover {
+      background-color: #0369a1 !important;
+    }
+    .btn-mesa-partes .btn-underline {
+      position: relative;
+      display: inline-block;
+      padding-bottom: 2px;
+    }
+    .btn-mesa-partes .btn-underline::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2.5px;
+      background-color: #ffffff;
+      border-radius: 9999px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-mesa-partes:hover .btn-underline::after,
+    .btn-mesa-partes.active .btn-underline::after {
+      width: 100%;
+    }
+
+    /* Custom subtle scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.04);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(14, 165, 233, 0.4);
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(14, 165, 233, 0.7);
+    }
+  </style>
+  <style data-purpose="scroll-storytelling">
+    :root { --header-h: calc(5rem + 1px); } /* = h-20 + borde de 1px del header sticky */
+
+    a:focus-visible { outline: 2px solid #0ea5e9; outline-offset: 3px; border-radius: 0.5rem; }
+    #formulario-consulta, #mapa-ubicacion { scroll-margin-top: calc(var(--header-h) + 1rem); }
+
+    /* ---------- ESCENARIO (Hero con foto) ---------- */
+    .hero {
+      --p: 0; /* progreso de la transición (0 → 1), lo actualiza el JS */
+      display: flex;
+      overflow-x: clip;
+      background-color: #f8faff;
+    }
+    .hero.is-covered { visibility: hidden; } /* las secciones ya lo cubren por completo */
+    .hero-inner {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      padding-block: clamp(1rem, 3vh, 2rem);
+    }
+    .stage-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+    .stage-card { flex: 1 1 auto; }
+    .hero-dim { background: #020617; opacity: 0; }
+
+    /* Entrada: foto, adorno, etiqueta, título (letra por letra), texto y botones (≈1,5 s) */
+    @keyframes hero-in {
+      from { opacity: 0; transform: translate3d(0, 22px, 0); }
+    }
+    .hero-anim { animation: hero-in .75s cubic-bezier(.2, .7, .2, 1) var(--d, 0ms) backwards; }
+    @keyframes photo-in { from { transform: scale(1.08); } }
+    .hero-photo { animation: photo-in 1.6s cubic-bezier(.2, .7, .2, 1) backwards; }
+    @keyframes accent-in { from { opacity: 0; transform: translate3d(-40%, 0, 0); } }
+    .hero-accent { animation: accent-in .9s cubic-bezier(.2, .8, .2, 1) .1s backwards; }
+
+    /* ---------- TIPOGRAFÍA CINÉTICA ---------- */
+    .kw { display: inline-block; white-space: nowrap; }
+    .kl { display: inline-block; animation: kl-in .8s cubic-bezier(.2, .8, .2, 1) calc(var(--s, 0ms) + var(--i, 0) * var(--step, 24ms)) backwards; }
+    @keyframes kl-in {
+      from { opacity: 0; transform: translate3d(0, .6em, 0) rotate(8deg) scale(.88); }
+    }
+    /* "atención ciudadana": brillo que recorre las letras */
+    .kl--glow {
+      animation:
+        kl-in .8s cubic-bezier(.2, .8, .2, 1) calc(var(--s, 0ms) + var(--i, 0) * var(--step, 24ms)) backwards,
+        kl-glow 3.6s ease-in-out calc(1.6s + var(--i, 0) * 80ms) infinite;
+    }
+    @keyframes kl-glow {
+      0%, 100% { transform: none; text-shadow: none; }
+      50% { transform: translate3d(0, -.06em, 0); text-shadow: 0 0 22px rgba(125, 211, 252, .65); }
+    }
+    /* Títulos de sección: las palabras se encienden con el scroll (--w lo calcula el JS; sin JS = visibles) */
+    .sw { display: inline-block; opacity: calc(.14 + .86 * var(--w, 1)); transform: translate3d(0, calc((1 - var(--w, 1)) * .5em), 0); }
+
+    /* Elementos con desvanecido continuo según su posición en pantalla (lo controla el JS) */
+    .reveal { will-change: opacity; transition-property: transform, box-shadow, border-color, background-color, color !important; }
+
+    /* ---------- SECCIONES (cortina) ---------- */
+    .curtain {
+      position: relative;
+      z-index: 2;
+      display: flow-root; /* contiene el margen inferior de la última sección (sin franja vacía antes del footer) */
+      overflow-x: clip;
+      min-height: calc(100vh - var(--header-h));
+      min-height: calc(100svh - var(--header-h));
+      background-color: #fff;
+      background-image:
+        radial-gradient(60rem 30rem at 88% -4%, rgba(14, 165, 233, .10), transparent 60%),
+        radial-gradient(50rem 28rem at 4% 0%, rgba(245, 158, 11, .10), transparent 60%),
+        linear-gradient(0deg, #f8faff, #fff);
+    }
+
+    /* ---------- MODO "SCROLL STORYTELLING" ----------
+       Solo con viewport de al menos 601px de alto y sin movimiento reducido, y mientras el Hero
+       quepa en una pantalla (lo decide el JS con .is-static). Si no, la página se ve como siempre. */
+    @media (min-height: 601px) and (prefers-reduced-motion: no-preference) {
+      .story:not(.is-static) .hero {
+        position: sticky;
+        top: var(--header-h);
+        z-index: 1;
+        height: calc(100vh - var(--header-h));
+        height: calc(100svh - var(--header-h));
+      }
+      .story:not(.is-static) .hero-inner {
+        opacity: calc(1 - var(--p) * 1.05);
+        transform: translate3d(0, calc(var(--p) * -2.5rem), 0) scale(calc(1 - var(--p) * .04));
+        transform-origin: 50% 0;
+        will-change: opacity, transform;
+      }
+      .story:not(.is-static) .hero-photo { transform: scale(calc(1 + var(--p) * .06)); will-change: transform; }
+      .story:not(.is-static) .hero-dim { opacity: calc(var(--p) * .5); }
+      /* cada línea del título se desplaza hacia un lado distinto mientras las secciones suben */
+      .story:not(.is-static) .hero-line { transform: translate3d(calc(var(--p) * var(--dx, 0vw)), 0, 0); will-change: transform; }
+      .story:not(.is-static) .curtain {
+        border-radius: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 3vw, 2rem) 0 0;
+        border-top: 1px solid rgba(226, 232, 240, .9);
+        transition: box-shadow .35s ease;
+      }
+      .story.is-lifted:not(.is-static) .curtain { box-shadow: 0 -22px 50px -22px rgba(15, 23, 42, .22); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-anim, .hero-photo, .hero-accent, .kl, .kl--glow { animation: none; }
+    }
+  </style>
+</head>
+<body class="bg-[#f8faff] text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+
+  <!-- ==================== HEADER (IDÉNTICO A LAS DEMÁS PÁGINAS) ==================== -->
+  <header class="sticky top-0 z-50 border-b border-slate-200/80 shadow-sm backdrop-blur-md bg-slate-100/90" data-purpose="global-header">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Brand Logo & District Label -->
+      <a aria-label="Ir al inicio de La Tinguiña Digital" class="flex items-center gap-3 group" href="index.html">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-sky-500 to-indigo-600 p-0.5 shadow-sm shadow-sky-500/20 group-hover:scale-105 transition-transform flex items-center justify-center">
+          <div class="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
+            <img src="data:image/png;base64,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" alt="Logo Municipalidad Distrital de La Tinguiña" class="w-full h-full object-contain p-0.5">
+          </div>
+        </div>
+        <div>
+          <span class="font-bold text-lg tracking-tight text-slate-900 block leading-tight">La Tinguiña Digital</span>
+          <span class="text-[11px] font-medium tracking-wide uppercase text-sky-800">Municipalidad Distrital</span>
+        </div>
+      </a>
+
+      <!-- Central Navigation -->
+      <nav aria-label="Navegación principal" class="hidden md:flex items-center space-x-1 lg:space-x-2 text-[14px] font-semibold text-slate-700 gap-6">
+        <a class="nav-item-link" href="index.html">Inicio</a>
+        <a class="nav-item-link" href="transparencia.html">Transparencia</a>
+        <a class="nav-item-link" href="noticias.html">Noticias</a>
+        <a class="nav-item-link active" href="contacto.html">Contacto</a>
+      </nav>
+
+      <!-- Right Action Controls -->
+      <div class="flex items-center gap-3">
+        <a class="btn-mesa-partes px-5 py-2.5 rounded-full text-white text-sm font-semibold bg-slate-900 hover:bg-sky-600 transition-all duration-200 shadow-md flex items-center gap-2 group" href="mesa-de-partes.html">
+          <span class="btn-underline">Mesa de Partes</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT: CONTACTO Y ATENCIÓN CIUDADANA ==================== -->
+  <main class="flex-grow w-full">
+<div class="story" id="story" data-purpose="scroll-story">
+
+    <!-- 1. HERO BANNER EDITORIAL DE CONTACTO (escenario fijo con la foto) -->
+    <section aria-labelledby="hero-title" class="hero relative" id="hero-contacto">
+      <div class="hero-inner">
+        <div class="stage-wrap w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="stage-card relative w-full rounded-3xl overflow-hidden shadow-2xl bg-slate-950 border border-slate-200/50 min-h-[340px] sm:min-h-[380px] lg:min-h-[420px] flex items-center group">
+            <!-- Fotografía de fondo de Central de Atención Ciudadana (Cloudinary AVIF con fallback de alta disponibilidad) -->
+      <picture class="hero-photo absolute inset-0 w-full h-full z-0 pointer-events-none select-none">
+        <source srcset="https://res.cloudinary.com/dfspsnrmp/image/upload/v1791340258/panorama-focus-headset-call-center-workspace-desk-with-blur-operator-prodigy_31965-119241_ejf6cn.avif" type="image/avif">
+        <img src="data:image/jpeg;base64,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" alt="Central de Atención y Orientación Ciudadana - Municipalidad Distrital de La Tinguiña" class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105">
+      </picture>
+
+      <!-- Capa de degradado cinematográfico para óptima legibilidad y profundidad -->
+      <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-900/40 z-0"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/40 z-0"></div>
+      <div class="hero-dim absolute inset-0 z-0 pointer-events-none"></div>
+
+      <!-- Acento curvo superior decorativo en esquina izquierda (Identidad del portal) -->
+      <div class="hero-accent absolute top-0 left-0 w-44 sm:w-60 h-12 pointer-events-none z-10 select-none">
+        <svg class="w-full h-full" viewBox="0 0 240 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="contactTopGrad" x1="0" y1="24" x2="240" y2="24" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#7c3aed" />
+              <stop offset="50%" stop-color="#2563eb" />
+              <stop offset="100%" stop-color="#00f5d4" />
+            </linearGradient>
+          </defs>
+          <path d="M 0 46 C 0 20 20 2 46 2 L 240 2" stroke="url(#contactTopGrad)" stroke-width="5" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <div class="relative z-20 max-w-3xl px-6 sm:px-10 lg:px-14 py-12 lg:py-16 space-y-5">
+        <!-- Badge animado de estado en vivo -->
+        <div class="hero-anim inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sky-300 text-xs font-semibold uppercase tracking-wider" style="--d:0ms">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Atención al Ciudadano · Municipalidad Distrital de La Tinguiña</span>
+        </div>
+
+        <!-- Título principal imponente con acento editorial -->
+        <h1 aria-label="Contacto y atención ciudadana" class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight" id="hero-title">
+          <span aria-hidden="true" class="hero-line block" style="--dx:-8vw;--s:120ms"><span class="kw"><span class="kl" style="--i:0">C</span><span class="kl" style="--i:1">o</span><span class="kl" style="--i:2">n</span><span class="kl" style="--i:3">t</span><span class="kl" style="--i:4">a</span><span class="kl" style="--i:5">c</span><span class="kl" style="--i:6">t</span><span class="kl" style="--i:7">o</span></span> <span class="kw"><span class="kl" style="--i:8">y</span></span></span>
+          <span aria-hidden="true" class="hero-line block font-serif italic" style="--dx:10vw;--s:260ms"><span class="kw"><span class="kl kl--glow" style="--i:0;color:#22d3ee">a</span><span class="kl kl--glow" style="--i:1;color:#2dd3f0">t</span><span class="kl kl--glow" style="--i:2;color:#39d3f2">e</span><span class="kl kl--glow" style="--i:3;color:#44d3f3">n</span><span class="kl kl--glow" style="--i:4;color:#50d3f5">c</span><span class="kl kl--glow" style="--i:5;color:#5bd3f7">i</span><span class="kl kl--glow" style="--i:6;color:#66d3f8">ó</span><span class="kl kl--glow" style="--i:7;color:#72d3fa">n</span></span> <span class="kw"><span class="kl kl--glow" style="--i:8;color:#7dd3fc">c</span><span class="kl kl--glow" style="--i:9;color:#8dd3e6">i</span><span class="kl kl--glow" style="--i:10;color:#9dd3d0">u</span><span class="kl kl--glow" style="--i:11;color:#add3ba">d</span><span class="kl kl--glow" style="--i:12;color:#bcd3a4">a</span><span class="kl kl--glow" style="--i:13;color:#ccd38f">d</span><span class="kl kl--glow" style="--i:14;color:#dcd379">a</span><span class="kl kl--glow" style="--i:15;color:#ecd363">n</span><span class="kl kl--glow" style="--i:16;color:#fcd34d">a</span></span></span>
+        </h1>
+
+        <!-- Texto breve y cercano -->
+        <p class="hero-anim text-base sm:text-lg text-slate-200 font-normal leading-relaxed max-w-2xl" style="--d:520ms">
+          Estamos aquí para ayudarte. Encuentra nuestros canales de atención o envíanos tu consulta.
+        </p>
+
+        <!-- Píldoras de métricas de confianza y accesibilidad rápida -->
+        <div class="hero-anim pt-2 flex flex-wrap items-center gap-3 text-xs font-medium text-slate-200" style="--d:700ms">
+          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/60 backdrop-blur-md border border-white/10">
+            <span class="material-symbols-outlined text-emerald-400 text-base">bolt</span>
+            <span>Respuesta en menos de 24h</span>
+          </div>
+          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/60 backdrop-blur-md border border-white/10">
+            <span class="material-symbols-outlined text-rose-400 text-base">verified_user</span>
+            <span>Serenazgo 24/7 activo</span>
+          </div>
+          <a href="#formulario-consulta" class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-sky-500 hover:bg-sky-400 text-white font-bold transition-all shadow-md shadow-sky-500/20 active:scale-95">
+            <span>Escribir mensaje</span>
+            <span class="material-symbols-outlined text-base">arrow_downward</span>
+          </a>
+        </div>
+      </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BEGIN: Secciones (cortina que sube sobre el Hero) -->
+    <div class="curtain" data-purpose="contact-content" id="contacto-curtain">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 lg:pt-14 pb-10 lg:pb-14 space-y-12 lg:space-y-16">
+    <!-- 2. BLOQUE PRINCIPAL EN 2 COLUMNAS (INFORMACIÓN + FORMULARIO SAAS 2026) -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+      
+      <!-- COLUMNA IZQUIERDA: INFORMACIÓN DE CONTACTO DE ALTO IMPACTO (lg:col-span-5) -->
+      <div class="lg:col-span-5 space-y-4">
+        
+        <!-- Cabecera de Columna -->
+        <div class="reveal border-b border-slate-200 pb-3">
+          <h2 data-scrub class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white flex items-center justify-center material-symbols-outlined text-lg shadow-sm shadow-sky-500/20">support_agent</span>
+            <span><span class="sw">Canales</span> <span class="sw">Institucionales</span></span>
+          </h2>
+          <p class="text-slate-500 text-xs sm:text-sm mt-1">
+            Información oficial y canales directos para resolver tus dudas.
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          
+          <!-- 🚨 TARJETA HERO DE EMERGENCIAS Y SERENAZGO 24/7 (DESTACADA) -->
+          <div data-dx="-1" class="reveal bg-gradient-to-br from-slate-950 via-slate-900 to-rose-950 text-white p-6 rounded-3xl border border-rose-500/30 shadow-xl shadow-rose-950/15 relative overflow-hidden group hover:border-rose-400/50 transition-all duration-300">
+            <!-- Glow ambiental sutil -->
+            <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="flex items-start gap-4 relative z-10">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 text-white flex items-center justify-center shrink-0 shadow-lg shadow-rose-600/30 group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-2xl">shield_with_heart</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2 mb-1">
+                  <span class="text-xs font-bold text-rose-300 uppercase tracking-wider">Emergencias y Serenazgo</span>
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-rose-500/20 border border-rose-500/40 text-rose-300 text-[10px] font-bold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse"></span>
+                    <span>24/7 ACTIVO</span>
+                  </span>
+                </div>
+                
+                <a href="tel:056654321" class="font-black text-white text-2xl sm:text-3xl tracking-tight hover:text-rose-400 transition-colors block mt-0.5 font-mono">
+                  (056) 654-321
+                </a>
+                
+                <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                  Base Central de Serenazgo La Tinguiña. Patrullaje integrado y auxilio rápido en todo el distrito.
+                </p>
+
+                <div class="mt-4 pt-3.5 border-t border-white/10 flex items-center justify-between text-xs">
+                  <span class="text-slate-400 font-medium">Comisaría PNP: (056) 251-110</span>
+                  <a href="tel:056654321" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold transition shadow-sm">
+                    <span class="material-symbols-outlined text-sm">call</span>
+                    <span>Llamar</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TARJETA 2: DIRECCIÓN MUNICIPAL -->
+          <div data-dx="-1" class="reveal bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all duration-300 group">
+            <div class="flex items-start gap-4">
+              <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                <span class="material-symbols-outlined text-2xl">location_on</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Dirección</span>
+                  <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">Sede Principal</span>
+                </div>
+                <p class="font-extrabold text-slate-900 text-sm sm:text-base mt-1 leading-snug">
+                  Av. Municipal N° 123, Plaza de Armas, La Tinguiña, Ica
+                </p>
+                <p class="text-xs text-slate-500 mt-1">Palacio Municipal frente a la glorieta central.</p>
+                <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <a href="#mapa-ubicacion" class="inline-flex items-center gap-1 font-bold text-emerald-600 hover:text-emerald-700 transition">
+                    <span>Ver mapa interactivo</span>
+                    <span class="material-symbols-outlined text-sm">south</span>
+                  </a>
+                  <a href="https://maps.google.com/?q=Municipalidad+Distrital+de+La+Tinguiña+Ica" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-slate-600 font-medium inline-flex items-center gap-1">
+                    <span>Google Maps</span>
+                    <span class="material-symbols-outlined text-xs">open_in_new</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TARJETA 3: CENTRAL TELEFÓNICA -->
+          <div data-dx="-1" class="reveal bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-sky-300 transition-all duration-300 group">
+            <div class="flex items-start gap-4">
+              <div class="w-11 h-11 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0 group-hover:bg-sky-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                <span class="material-symbols-outlined text-2xl">call</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Teléfono</span>
+                  <button onclick="copyToClipboard('(056) 123-456', 'Teléfono central copiado')" class="text-[11px] text-sky-600 hover:underline font-bold flex items-center gap-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">content_copy</span>
+                    <span>Copiar</span>
+                  </button>
+                </div>
+                <div class="flex items-baseline gap-3 mt-1">
+                  <a href="tel:056123456" class="font-black text-slate-900 text-xl sm:text-2xl hover:text-sky-600 transition-colors font-mono">
+                    (056) 123-456
+                  </a>
+                  <span class="text-xs text-slate-500 font-medium">Central Telefónica</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 mt-2 pt-2 border-t border-slate-100 text-xs text-slate-600">
+                  <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-semibold">Anexo 101: Alcaldía</span>
+                  <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-semibold">Anexo 102: Mesa de Partes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TARJETA 4: CORREO INSTITUCIONAL -->
+          <div data-dx="-1" class="reveal bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-indigo-300 transition-all duration-300 group">
+            <div class="flex items-start gap-4">
+              <div class="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                <span class="material-symbols-outlined text-2xl">mail</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Correo institucional</span>
+                  <span class="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md">Oficial</span>
+                </div>
+                <div class="mt-2 space-y-2">
+                  <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                    <div>
+                      <span class="text-[10px] text-slate-400 block font-bold uppercase">Orientación y Consultas</span>
+                      <a href="mailto:informes@latinguiña.gob.pe" class="font-bold text-slate-900 text-xs sm:text-sm hover:text-indigo-600 transition-colors">
+                        informes@latinguiña.gob.pe
+                      </a>
+                    </div>
+                    <button onclick="copyToClipboard('informes@latinguiña.gob.pe', 'Correo de informes copiado')" class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-white transition cursor-pointer" title="Copiar correo">
+                      <span class="material-symbols-outlined text-sm">content_copy</span>
+                    </button>
+                  </div>
+                  <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                    <div>
+                      <span class="text-[10px] text-slate-400 block font-bold uppercase">Mesa de Partes Virtual</span>
+                      <a href="mailto:mesadepartes@latinguiña.gob.pe" class="font-bold text-slate-900 text-xs sm:text-sm hover:text-indigo-600 transition-colors">
+                        mesadepartes@latinguiña.gob.pe
+                      </a>
+                    </div>
+                    <button onclick="copyToClipboard('mesadepartes@latinguiña.gob.pe', 'Correo de mesa de partes copiado')" class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-white transition cursor-pointer" title="Copiar correo">
+                      <span class="material-symbols-outlined text-sm">content_copy</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TARJETA 5: HORARIO DE ATENCIÓN -->
+          <div data-dx="-1" class="reveal bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-xl hover:border-amber-300 transition-all duration-300 group">
+            <div class="flex items-start gap-4">
+              <div class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-all duration-300 shadow-xs">
+                <span class="material-symbols-outlined text-2xl">schedule</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Horario de atención</span>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-bold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    <span>Presencial</span>
+                  </span>
+                </div>
+                <p class="font-black text-slate-900 text-base sm:text-lg mt-1">
+                  Lunes a viernes: 08:00 AM – 04:30 PM
+                </p>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                  Atención continua en ventanillas de Palacio Municipal. Fines de semana y feriados disponible Mesa de Partes Virtual 24/7.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA: FORMULARIO DE CONTACTO PREMIUM UX/UI 2026 (lg:col-span-7) -->
+      <div class="lg:col-span-7" id="formulario-consulta">
+        <div data-dx="1" class="reveal bg-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl border border-slate-200/90 relative overflow-hidden">
+          
+          <!-- Franja decorativa superior degradada -->
+          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-cyan-400"></div>
+
+          <!-- Cabecera del formulario -->
+          <div class="border-b border-slate-100 pb-6 mb-7">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-bold uppercase tracking-wider mb-2.5">
+              <span class="material-symbols-outlined text-base">chat</span>
+              <span>Canal Directo al Vecino</span>
+            </div>
+            <h2 data-scrub class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+              <span class="sw">Envíanos</span> <span class="sw">un</span> <span class="sw">mensaje</span>
+            </h2>
+            <p class="text-slate-500 text-sm sm:text-base mt-1.5">
+              Escríbenos y te responderemos a la brevedad.
+            </p>
+          </div>
+
+          <!-- Formulario Interactivo con estados modernos -->
+          <form id="contact-form" class="space-y-5" onsubmit="handleContactSubmit(event)">
+            
+            <!-- Campo 1: Nombres y Apellidos -->
+            <div class="space-y-1.5">
+              <label for="contact-name" class="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wide">
+                <span>Nombres y apellidos <span class="text-rose-500">*</span></span>
+                <span class="text-[11px] text-slate-400 font-normal">Identificación ciudadana</span>
+              </label>
+              <div class="relative flex items-center group">
+                <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl pointer-events-none group-focus-within:text-sky-600 transition-colors">person</span>
+                <input type="text" id="contact-name" name="name" required placeholder="Ej. Juan Pérez Mendoza" 
+                  class="w-full pl-12 pr-4 py-3.5 bg-slate-50/80 border border-slate-200 rounded-2xl text-slate-900 text-sm font-medium placeholder-slate-400 focus:outline-none focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 transition-all duration-200">
+              </div>
+            </div>
+
+            <!-- Fila doble: Correo Electrónico y Teléfono -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              <!-- Campo 2: Correo electrónico -->
+              <div class="space-y-1.5">
+                <label for="contact-email" class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                  Correo electrónico <span class="text-rose-500">*</span>
+                </label>
+                <div class="relative flex items-center group">
+                  <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl pointer-events-none group-focus-within:text-sky-600 transition-colors">alternate_email</span>
+                  <input type="email" id="contact-email" name="email" required placeholder="correo@ejemplo.com" 
+                    class="w-full pl-12 pr-4 py-3.5 bg-slate-50/80 border border-slate-200 rounded-2xl text-slate-900 text-sm font-medium placeholder-slate-400 focus:outline-none focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 transition-all duration-200">
+                </div>
+              </div>
+
+              <!-- Campo 3: Teléfono o celular -->
+              <div class="space-y-1.5">
+                <label for="contact-phone" class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                  Teléfono o celular <span class="text-rose-500">*</span>
+                </label>
+                <div class="relative flex items-center group">
+                  <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl pointer-events-none group-focus-within:text-sky-600 transition-colors">smartphone</span>
+                  <input type="tel" id="contact-phone" name="phone" required placeholder="987 654 321" 
+                    class="w-full pl-12 pr-4 py-3.5 bg-slate-50/80 border border-slate-200 rounded-2xl text-slate-900 text-sm font-medium placeholder-slate-400 focus:outline-none focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 transition-all duration-200">
+                </div>
+              </div>
+            </div>
+
+            <!-- Campo 4: Asunto o Área de consulta -->
+            <div class="space-y-1.5">
+              <label for="contact-subject" class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                Asunto o área de consulta <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative flex items-center group">
+                <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl pointer-events-none group-focus-within:text-sky-600 transition-colors">category</span>
+                <select id="contact-subject" name="subject" required 
+                  class="w-full pl-12 pr-10 py-3.5 bg-slate-50/80 border border-slate-200 rounded-2xl text-slate-900 text-sm font-medium focus:outline-none focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 transition-all duration-200 appearance-none cursor-pointer">
+                  <option value="" disabled selected>Seleccione un área o motivo...</option>
+                  <option value="orientacion">Orientación General y Servicios al Vecino</option>
+                  <option value="mesadepartes">Mesa de Partes y Estado de Expedientes</option>
+                  <option value="tributos">Administración Tributaria, Rentas y Arbitrios</option>
+                  <option value="obras">Desarrollo Urbano, Obras Públicas y Licencias</option>
+                  <option value="seguridad">Seguridad Ciudadana y Serenazgo</option>
+                  <option value="ambiental">Servicios a la Ciudad, Limpieza y Áreas Verdes</option>
+                  <option value="social">Programas Sociales, Vaso de Leche y DEMUNA</option>
+                  <option value="otro">Otras Consultas / Solicitudes</option>
+                </select>
+                <span class="material-symbols-outlined absolute right-4 text-slate-400 text-xl pointer-events-none">expand_more</span>
+              </div>
+            </div>
+
+            <!-- Campo 5: Mensaje con contador en vivo -->
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label for="contact-message" class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                  Mensaje <span class="text-rose-500">*</span>
+                </label>
+                <span id="char-counter" class="text-[11px] text-slate-400 font-mono">0 / 600 caracteres</span>
+              </div>
+              <textarea id="contact-message" name="message" rows="4" maxlength="600" required placeholder="Escriba aquí su consulta o solicitud detallada..."
+                oninput="document.getElementById('char-counter').textContent = this.value.length + ' / 600 caracteres'"
+                class="w-full p-4 bg-slate-50/80 border border-slate-200 rounded-2xl text-slate-900 text-sm font-medium placeholder-slate-400 focus:outline-none focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 transition-all duration-200 resize-y"></textarea>
+            </div>
+
+            <!-- Checkbox de Protección de Datos Personales conforme a ley -->
+            <div class="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-100">
+              <label class="flex items-start gap-3 cursor-pointer group">
+                <input type="checkbox" id="contact-consent" required 
+                  class="mt-1 w-4 h-4 rounded-md border-slate-300 text-sky-600 focus:ring-sky-500 transition cursor-pointer">
+                <span class="text-xs text-slate-600 leading-relaxed select-none group-hover:text-slate-800 transition-colors">
+                  Acepto el tratamiento de mis datos personales para la atención de esta consulta conforme a ley.
+                </span>
+              </label>
+            </div>
+
+            <!-- Botón Principal: "Enviar consulta" con degradado moderno y microinteracción -->
+            <div class="pt-2">
+              <button type="submit" id="btn-submit-contact" 
+                class="w-full py-4 px-8 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-sky-900 hover:from-sky-600 hover:via-sky-500 hover:to-cyan-600 text-white font-extrabold text-sm sm:text-base shadow-lg hover:shadow-xl hover:shadow-sky-500/25 transition-all duration-300 flex items-center justify-center gap-2.5 cursor-pointer group active:scale-[0.99]">
+                <span>Enviar consulta</span>
+                <span class="material-symbols-outlined text-xl group-hover:translate-x-1.5 transition-transform">send</span>
+              </button>
+            </div>
+
+            <p class="text-center text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-sm text-emerald-500">lock</span>
+              <span>Canal cifrado y seguro. Tu información será tratada con estricta reserva institucional.</span>
+            </p>
+          </form>
+
+          <!-- Tarjeta de Confirmación de Envío Exitoso (Oculta por defecto) -->
+          <div id="contact-success-state" class="hidden flex-col items-center justify-center py-12 text-center space-y-5 animate-fadeIn">
+            <div class="w-16 h-16 rounded-3xl bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-xl shadow-emerald-600/15">
+              <span class="material-symbols-outlined text-3xl">check_circle</span>
+            </div>
+            <div class="space-y-1.5 max-w-md">
+              <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">¡Consulta Registrada!</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">
+                Hemos recibido tu mensaje con éxito. El equipo municipal se comunicará contigo al correo o teléfono proporcionado.
+              </p>
+            </div>
+            
+            <div class="p-5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs space-y-1.5 w-full max-w-sm">
+              <span class="text-slate-400 block font-semibold uppercase tracking-wider text-[10px]">Código Único de Atención Ciudadana</span>
+              <span id="ticket-number-display" class="font-mono text-xl font-black text-sky-700 tracking-wider">CNS-2026-08492</span>
+              <span class="text-[11px] text-slate-500 block pt-1 border-t border-slate-200/60">Tiempo estimado de respuesta: Menos de 24h hábiles</span>
+            </div>
+
+            <button onclick="resetContactForm()" class="px-7 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition shadow-md cursor-pointer flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">refresh</span>
+              <span>Enviar otra consulta</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 3. SECCIÓN UBICACIÓN: "Encuéntranos" (MAGAZINE-STYLE FULL EMBED) -->
+    <section class="space-y-6" id="mapa-ubicacion">
+      <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-5">
+        <div>
+          <span class="text-xs font-bold text-sky-700 uppercase tracking-wider block">Ubicación Estratégica</span>
+          <h2 data-scrub class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-0.5">
+            <span class="sw">Encuéntranos</span>
+          </h2>
+          <p class="text-slate-500 text-xs sm:text-sm mt-1">
+            Sede central de la Municipalidad Distrital de La Tinguiña frente a la Plaza de Armas.
+          </p>
+        </div>
+
+        <!-- Botón Ver en Google Maps -->
+        <a href="https://maps.google.com/?q=Municipalidad+Distrital+de+La+Tinguiña+Ica" target="_blank" rel="noopener noreferrer" 
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 text-slate-800 text-xs font-bold hover:bg-slate-50 hover:border-sky-300 hover:text-sky-600 transition-all shadow-xs shrink-0">
+          <span class="material-symbols-outlined text-base text-rose-500">pin_drop</span>
+          <span>Ver en Google Maps</span>
+          <span class="material-symbols-outlined text-xs">open_in_new</span>
+        </a>
+      </div>
+
+      <!-- Tarjeta Integrada de Mapa y Referencias con Gran Impacto Visual -->
+      <div data-dx="0" class="reveal bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-xl grid grid-cols-1 lg:grid-cols-12">
+        
+        <!-- Mapa Interactivo (lg:col-span-8) -->
+        <div class="lg:col-span-8 h-[360px] sm:h-[420px] lg:h-[460px] relative w-full bg-slate-100">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3870.366436665784!2d-75.7166164240366!3d-14.038411082531375!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9110e2c88fbf09d7%3A0xc39fbe87bb24bcfa!2sMunicipalidad%20Distrital%20de%20La%20Tingui%C3%B1a!5e0!3m2!1ses!2spe!4v1711900000000!5m2!1ses!2spe" 
+            class="w-full h-full border-0" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Mapa Municipalidad Distrital de La Tinguiña">
+          </iframe>
+        </div>
+
+        <!-- Información de Sede al lado (lg:col-span-4) -->
+        <div class="lg:col-span-4 p-6 sm:p-8 flex flex-col justify-between bg-slate-50/80 border-t lg:border-t-0 lg:border-l border-slate-200/80 space-y-6">
+          <div class="space-y-4">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider">
+              <span class="material-symbols-outlined text-sm">apartment</span>
+              <span>Palacio Municipal</span>
+            </div>
+            
+            <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 leading-snug">
+              Sede Central La Tinguiña
+            </h3>
+
+            <div class="space-y-3.5 text-xs text-slate-600">
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0 mt-0.5">check_circle</span>
+                <span><strong>Dirección:</strong> Av. Municipal N° 123 (Frente a la emblemática Plaza de Armas de La Tinguiña).</span>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-sky-600 text-base shrink-0 mt-0.5">directions_car</span>
+                <span><strong>Accesibilidad vial:</strong> A solo 8 minutos del cercado de Ica. Fácil acceso por Av. Las Nieves y Av. Municipal.</span>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-indigo-600 text-base shrink-0 mt-0.5">accessible</span>
+                <span><strong>Inclusión ciudadana:</strong> Rampas de acceso universal y ventanillas preferenciales para adultos mayores y personas con discapacidad.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-200/80 space-y-2">
+            <a href="https://maps.google.com/?q=Municipalidad+Distrital+de+La+Tinguiña+Ica" target="_blank" rel="noopener noreferrer" 
+              class="w-full py-3.5 px-4 rounded-xl bg-slate-900 hover:bg-sky-600 text-white font-bold text-xs transition-all shadow-md flex items-center justify-center gap-2 text-center group">
+              <span>Cómo llegar en Google Maps</span>
+              <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">directions</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+      </div>
+    </div>
+    <!-- END: Secciones -->
+  </div>
+  <!-- END: story -->
+
+  </main>
+
+  <!-- ==================== FOOTER (mismo del Home: una sola línea) ==================== -->
+  <footer class="border-t border-slate-200 bg-slate-100 py-3 text-center text-xs text-slate-500 mt-auto" data-purpose="site-footer">
+    <p class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">© 2026 Municipalidad Distrital de La Tinguiña</p>
+  </footer>
+
+  <script>
+    // Notificación Toast flotante
+    function showToast(msg) {
+      let toast = document.getElementById('toast-notification');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast-notification';
+        toast.className = 'fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 text-xs font-semibold flex items-center gap-2 transition-all duration-300 transform translate-y-10 opacity-0 pointer-events-none';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span> <span>${msg}</span>`;
+      toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+      }, 3200);
+    }
+
+    // Copiar al portapapeles
+    function copyToClipboard(text, successMsg) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      }
+      showToast(successMsg || 'Copiado al portapapeles');
+    }
+
+    // Manejo interactivo del formulario de contacto
+    function handleContactSubmit(event) {
+      event.preventDefault();
+      const form = document.getElementById('contact-form');
+      const submitBtn = document.getElementById('btn-submit-contact');
+      const successState = document.getElementById('contact-success-state');
+      const ticketDisplay = document.getElementById('ticket-number-display');
+
+      // Animación de envío con estado de carga
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="inline-block animate-spin mr-2">◌</span><span>Registrando consulta oficial...</span>';
+
+      setTimeout(() => {
+        // Generar ticket aleatorio cívico
+        const ticketNum = 'CNS-2026-' + Math.floor(10000 + Math.random() * 90000);
+        if (ticketDisplay) ticketDisplay.textContent = ticketNum;
+
+        // Ocultar formulario y mostrar éxito
+        form.classList.add('hidden');
+        successState.classList.remove('hidden');
+        successState.classList.add('flex');
+
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        showToast('Consulta registrada correctamente: ' + ticketNum);
+      }, 700);
+    }
+
+    function resetContactForm() {
+      const form = document.getElementById('contact-form');
+      const successState = document.getElementById('contact-success-state');
+      if (form && successState) {
+        form.reset();
+        document.getElementById('char-counter').textContent = '0 / 600 caracteres';
+        form.classList.remove('hidden');
+        successState.classList.add('hidden');
+        successState.classList.remove('flex');
+      }
+    }
+  </script>
+
+  <script data-purpose="scroll-storytelling">
+  (function () {
+    'use strict';
+
+    var story = document.getElementById('story');
+    var hero = document.getElementById('hero-contacto');
+    if (!story || !hero) return;
+
+    function mql(q) { return window.matchMedia ? window.matchMedia(q) : { matches: false }; }
+    function listen(m, fn) {
+      if (m.addEventListener) m.addEventListener('change', fn);
+      else if (m.addListener) m.addListener(fn);
+    }
+    function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+    var reduceMotion = mql('(prefers-reduced-motion: reduce)');
+    var pinMQ = mql('(min-height: 601px) and (prefers-reduced-motion: no-preference)');
+
+    /* ---------- Progreso del scroll → --p (0..1) ---------- */
+    var heroH = 1, lastP = -1, covered = false, ticking = false, dir = 1, lastDir = 1, lastY = 0, pEff = 0, pTarget = 0, easing = false, lastT = 0, lifted = false;
+
+    function isPinned() { return pinMQ.matches && !story.classList.contains('is-static'); }
+
+    function setCovered(c) {
+      if (c === covered) return;
+      covered = c;
+      hero.classList.toggle('is-covered', c);
+    }
+    function setLifted(v) {
+      if (v === lifted) return;
+      lifted = v;
+      story.classList.toggle('is-lifted', v);
+    }
+
+    /* ---------- Los efectos se adelantan al scroll (también al volver) ----------
+       Al bajar, el progreso visual va por delante del scroll real; al subir va por detrás, así el
+       Hero reaparece antes. El valor se suaviza para que no haya saltos al cambiar de dirección. */
+    var LEAD_DOWN = 1.8, LEAD_UP = 2.3;
+    function targetFor(p) { return dir >= 0 ? 1 - Math.pow(1 - p, LEAD_DOWN) : Math.pow(p, LEAD_UP); }
+    function step(ts) {
+      var dt = Math.min(Math.max(ts - lastT, 0), 64);
+      lastT = ts;
+      pEff += (pTarget - pEff) * (1 - Math.exp(-dt / 90));
+      if (Math.abs(pTarget - pEff) < 0.004) { pEff = pTarget; easing = false; }
+      hero.style.setProperty('--p', pEff.toFixed(3));
+      if (easing) window.requestAnimationFrame(step);
+    }
+    function easeTo(target, snap) {
+      pTarget = target;
+      if (snap) { pEff = target; easing = false; hero.style.setProperty('--p', pEff.toFixed(3)); return; }
+      if (!easing) { easing = true; lastT = performance.now(); window.requestAnimationFrame(step); }
+    }
+
+    function update(force) {
+      ticking = false;
+      if (!isPinned()) {
+        if (force || lastP !== 0) { hero.style.setProperty('--p', '0'); lastP = 0; pEff = 0; pTarget = 0; easing = false; }
+        setCovered(false);
+        setLifted(false);
+        return;
+      }
+      var y = window.pageYOffset;
+      if (y > lastY + 0.5) dir = 1; else if (y < lastY - 0.5) dir = -1;
+      lastY = y;
+      var p = Math.min(Math.max(y / heroH, 0), 1);
+      if (!force && p === lastP && dir === lastDir) return;
+      lastP = p; lastDir = dir;
+      easeTo(targetFor(p), force);
+      setCovered(p >= 0.999);
+      setLifted(p > 0.002);
+    }
+
+    /* ---------- Desvanecido por posición ----------
+       Lo que va saliendo por arriba (bajo el header) o por abajo del viewport se desvanece en
+       proporción a lo que ya se ocultó, y lo que entra aparece igual de gradual. Solo cambia
+       opacity (y translate en las tarjetas); con movimiento reducido o sin JS todo queda visible. */
+    var fadeEls = reduceMotion.matches ? [] : Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+    var fadeLast = [];
+    var fadeDx = fadeEls.map(function (el) { return el.hasAttribute('data-dx') ? parseFloat(el.getAttribute('data-dx')) : null; });
+    var headerEl = document.querySelector('header');
+
+    function fade() {
+      if (!fadeEls.length) return;
+      var vh = window.innerHeight;
+      var top = headerEl ? headerEl.getBoundingClientRect().bottom : 0;
+      var maxZone = 300;                                    // máx. tramo de desvanecido (px)
+      var remaining = document.documentElement.scrollHeight - (window.pageYOffset + vh);
+      var bottom = vh + maxZone * (1 - clamp01(remaining / maxZone)); // al final de la página nada se desvanece
+      var vals = [], i, r, zone, o;
+      for (i = 0; i < fadeEls.length; i++) {                // 1) leer
+        if (fadeEls[i].offsetParent === null) { vals.push(null); continue; }
+        r = fadeEls[i].getBoundingClientRect();
+        zone = Math.max(Math.min(r.height, 420) * 0.9, 1); // proporcional al tamaño: se desvanece a medida que se oculta
+        o = clamp01((r.bottom - top) / zone) * clamp01((bottom - r.top) / zone);
+        vals.push(o * o * (3 - 2 * o));
+      }
+      for (i = 0; i < fadeEls.length; i++) {                // 2) escribir
+        o = vals[i];
+        if (o === null) continue;
+        if (o > 0.995) o = 1;
+        if (o === fadeLast[i]) continue;
+        fadeLast[i] = o;
+        fadeEls[i].style.opacity = o === 1 ? '' : o.toFixed(3);
+        if (fadeDx[i] !== null) { // tarjetas: entran/salen deslizándose desde su costado (el mapa, desde abajo)
+          fadeEls[i].style.translate = o === 1 ? '' :
+            (fadeDx[i] * (1 - o) * 72).toFixed(1) + 'px ' + (fadeDx[i] === 0 ? ((1 - o) * 48).toFixed(1) : '0') + 'px';
+        }
+      }
+    }
+
+    /* ---------- Palabras de los títulos que se encienden con el scroll (y se apagan al subir) ---------- */
+    var scrubBlocks = reduceMotion.matches ? [] : Array.prototype.map.call(document.querySelectorAll('[data-scrub]'), function (el) {
+      return { el: el, words: Array.prototype.slice.call(el.querySelectorAll('.sw')), last: -1 };
+    });
+    function scrub() {
+      var vh = window.innerHeight, b, i, n, t, blk;
+      for (b = 0; b < scrubBlocks.length; b++) {
+        blk = scrubBlocks[b];
+        t = clamp01((vh - blk.el.getBoundingClientRect().top) / (vh * 0.56));
+        if (t === blk.last) continue;
+        blk.last = t;
+        n = blk.words.length;
+        for (i = 0; i < n; i++) blk.words[i].style.setProperty('--w', clamp01((t * (n + 6) - i) / 6).toFixed(3));
+      }
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () { update(false); fade(); scrub(); });
+    }
+
+    /* El Hero solo se fija si cabe en una pantalla (texto agrandado, pantallas muy bajas: no se fija). */
+    function measure() {
+      story.classList.remove('is-static');
+      if (pinMQ.matches) {
+        // offsetHeight ignora transformaciones, así que no le afectan las animaciones de entrada
+        var pinnedH = hero.offsetHeight;                // alto fijado por CSS (pantalla - header)
+        story.classList.add('is-static');
+        var naturalH = hero.offsetHeight;               // alto que ocupa el contenido sin fijar
+        story.classList.remove('is-static');
+        if (naturalH > pinnedH + 1) story.classList.add('is-static');
+      }
+      heroH = Math.max(hero.offsetHeight, 1);
+      update(true);
+      fade();
+      scrub();
+    }
+
+    var resizeQueued = false;
+    function onResize() {
+      if (resizeQueued) return;
+      resizeQueued = true;
+      window.requestAnimationFrame(function () { resizeQueued = false; measure(); });
+    }
+
+    /* al enviar el formulario se oculta/muestra contenido: se recalcula el desvanecido */
+    var formCol = document.getElementById('formulario-consulta');
+    if (formCol && window.MutationObserver) {
+      new MutationObserver(function () { window.requestAnimationFrame(fade); })
+        .observe(formCol, { subtree: true, attributes: true, attributeFilter: ['class'] });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+    window.addEventListener('load', measure);
+    window.addEventListener('pageshow', measure);
+    listen(pinMQ, measure);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    measure();
+  })();
+  </script>
+</body>
+</html>

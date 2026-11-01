@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Mesa de Partes Virtual — La Tinguiña Digital</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            body: ['"Inter"', 'sans-serif'],
+            serif: ['"DM Serif Display"', 'serif'],
+          },
+          colors: {
+            brand: {
+              navy: '#0f172a',
+              sky: '#0284c7',
+              skyHover: '#0369a1',
+              cyan: '#00b4d8',
+              amber: '#f59e0b',
+              amberDark: '#d97706',
+              bgLight: '#f8faff',
+              surface: '#ffffff',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Subrayado animado de izquierda a derecha en enlaces de navegación (idéntico al Home) */
+    .nav-item-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 0.25rem;
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .nav-item-link:hover {
+      color: #020617;
+    }
+    .nav-item-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2.5px;
+      background-color: #0ea5e9;
+      border-radius: 9999px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-item-link:hover::after,
+    .nav-item-link.active::after {
+      width: 100%;
+    }
+    .nav-item-link.active {
+      color: #020617;
+      font-weight: 700;
+    }
+
+    /* Subrayado animado y efecto hover azul en botón Mesa de Partes */
+    .btn-mesa-partes {
+      transition: all 0.25s ease;
+    }
+    .btn-mesa-partes:hover {
+      background-color: #0284c7 !important;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+    .btn-mesa-partes.active {
+      background-color: #0284c7 !important;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    }
+    .btn-mesa-partes.active:hover {
+      background-color: #0369a1 !important;
+    }
+    .btn-mesa-partes .btn-underline {
+      position: relative;
+      display: inline-block;
+      padding-bottom: 2px;
+    }
+    .btn-mesa-partes .btn-underline::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2.5px;
+      background-color: #ffffff;
+      border-radius: 9999px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-mesa-partes:hover .btn-underline::after,
+    .btn-mesa-partes.active .btn-underline::after {
+      width: 100%;
+    }
+
+    /* Custom subtle scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.04);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(14, 165, 233, 0.4);
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(14, 165, 233, 0.7);
+    }
+  </style>
+  <style data-purpose="scroll-storytelling">
+    :root { --header-h: calc(5rem + 1px); } /* = h-20 + borde de 1px del header sticky */
+
+    a:focus-visible { outline: 2px solid #0ea5e9; outline-offset: 3px; border-radius: 0.5rem; }
+
+    /* ---------- ESCENARIO (título + tarjetas de acción) ---------- */
+    .hero {
+      --p: 0; /* progreso de la transición (0 → 1), lo actualiza el JS */
+      display: flex;
+      overflow-x: clip;
+      background-color: #f8faff; /* mismo fondo claro de la página original */
+    }
+    .hero.is-covered { visibility: hidden; } /* la cortina ya lo cubre por completo */
+    .hero-inner {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      padding-block: clamp(.75rem, 3vh, 2rem);
+    }
+    /* Espacios y tamaños en función del alto de la pantalla: en pantallas altas = diseño original,
+       en laptops el escenario completo cabe en una pantalla y puede fijarse. */
+    .stage-wrap {
+      flex: 1 1 auto; min-height: 0;
+      display: flex; flex-direction: column; justify-content: center;
+      gap: clamp(1rem, 3.5vh, 3rem);
+    }
+    .stage-title > * + * { margin-top: clamp(.5rem, 1.6vh, 1rem); }
+    .stage-h1 { font-size: min(clamp(2.1rem, 7.2vh, 3.75rem), 9.5vw); }
+    .stage-actions { padding-top: 0; }
+    .stage-wrap .card-action { padding: clamp(1.25rem, 4.2vh, 3rem); }
+    .stage-wrap .card-icon {
+      width: clamp(3.5rem, 9.5vh, 6rem); height: clamp(3.5rem, 9.5vh, 6rem);
+      margin-bottom: clamp(.75rem, 2.4vh, 1.5rem);
+    }
+    .stage-wrap .card-icon .material-symbols-outlined { font-size: clamp(1.75rem, 5vh, 3rem); }
+    .stage-wrap .card-sub { margin-bottom: clamp(1rem, 3vh, 2rem); }
+    /* las tarjetas se mueven con el scroll: sin transición de transform/opacity (sería lenta y arrastrada) */
+    .stage-wrap .card-action { transition-property: box-shadow, border-color, background-color, color !important; }
+
+    /* Entrada: etiqueta, título (letra por letra), subtítulo y tarjetas (≈1,5 s) */
+    @keyframes hero-in {
+      from { opacity: 0; transform: translate3d(0, 22px, 0); }
+    }
+    .hero-anim { animation: hero-in .75s cubic-bezier(.2, .7, .2, 1) var(--d, 0ms) backwards; }
+
+    /* ---------- TIPOGRAFÍA CINÉTICA ---------- */
+    .kw { display: inline-block; white-space: nowrap; }
+    .kl { display: inline-block; animation: kl-in .8s cubic-bezier(.2, .8, .2, 1) calc(var(--s, 0ms) + var(--i, 0) * var(--step, 24ms)) backwards; }
+    @keyframes kl-in {
+      from { opacity: 0; transform: translate3d(0, .6em, 0) rotate(8deg) scale(.88); }
+    }
+    /* "VIRTUAL": brillo que recorre las letras */
+    .kl--glow {
+      animation:
+        kl-in .8s cubic-bezier(.2, .8, .2, 1) calc(var(--s, 0ms) + var(--i, 0) * var(--step, 24ms)) backwards,
+        kl-glow 3.6s ease-in-out calc(1.6s + var(--i, 0) * 80ms) infinite;
+    }
+    @keyframes kl-glow {
+      0%, 100% { transform: none; text-shadow: none; }
+      50% { transform: translate3d(0, -.06em, 0); text-shadow: 0 0 20px rgba(14, 165, 233, .5); }
+    }
+    /* "Requisitos": la palabra se enciende con el scroll (--w lo calcula el JS; sin JS = visible) */
+    .sw { display: inline-block; opacity: calc(.14 + .86 * var(--w, 1)); transform: translate3d(0, calc((1 - var(--w, 1)) * .5em), 0); }
+
+    /* Elementos con desvanecido continuo según su posición en pantalla (lo controla el JS) */
+    .reveal { will-change: opacity; transition-property: transform, box-shadow, border-color, background-color, color !important; }
+
+    /* ---------- REQUISITOS E INFORMACIÓN (cortina) ---------- */
+    .curtain {
+      position: relative;
+      z-index: 2;
+      display: flex;            /* contenido centrado en la pantalla; sin franjas vacías por márgenes */
+      flex-direction: column;
+      justify-content: center;
+      overflow-x: clip;
+      background-color: #fff;
+      background-image:
+        radial-gradient(60rem 30rem at 88% -4%, rgba(14, 165, 233, .10), transparent 60%),
+        radial-gradient(50rem 28rem at 4% 0%, rgba(245, 158, 11, .10), transparent 60%),
+        linear-gradient(0deg, #f8faff, #fff);
+    }
+
+    /* ---------- MODO "SCROLL STORYTELLING" ----------
+       Solo con viewport de al menos 601px de alto y sin movimiento reducido, y mientras el escenario
+       quepa en una pantalla (lo decide el JS con .is-static). Si no, la página se ve como siempre. */
+    @media (min-height: 601px) and (prefers-reduced-motion: no-preference) {
+      .story:not(.is-static) .hero {
+        position: sticky;
+        top: var(--header-h);
+        z-index: 1;
+        height: calc(100vh - var(--header-h));
+        height: calc(100svh - var(--header-h));
+      }
+      .story:not(.is-static) .hero-inner {
+        opacity: calc(1 - var(--p) * 1.05);
+        transform: translate3d(0, calc(var(--p) * -2.5rem), 0) scale(calc(1 - var(--p) * .04));
+        transform-origin: 50% 0;
+        will-change: opacity, transform;
+      }
+      /* título, subtítulo y tarjetas se desplazan hacia lados distintos mientras la cortina sube */
+      .story:not(.is-static) .hero-line { transform: translate3d(calc(var(--p) * var(--dx, 0vw)), 0, 0); will-change: transform; }
+      .story:not(.is-static) .curtain {
+        min-height: calc(100vh - var(--header-h)); /* garantiza que la cortina cubra por completo el escenario */
+        min-height: calc(100svh - var(--header-h));
+        border-radius: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 3vw, 2rem) 0 0;
+        border-top: 1px solid rgba(226, 232, 240, .9);
+        transition: box-shadow .35s ease;
+      }
+      .story.is-lifted:not(.is-static) .curtain { box-shadow: 0 -22px 50px -22px rgba(15, 23, 42, .22); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-anim, .kl, .kl--glow { animation: none; }
+    }
+  </style>
+</head>
+<body class="bg-[#f8faff] text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+
+  <!-- ==================== HEADER (IDÉNTICO A LAS DEMÁS PÁGINAS) ==================== -->
+  <header class="sticky top-0 z-50 border-b border-slate-200/80 shadow-sm backdrop-blur-md bg-slate-100/90" data-purpose="global-header">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Brand Logo & District Label -->
+      <a aria-label="Ir al inicio de La Tinguiña Digital" class="flex items-center gap-3 group" href="index.html">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-sky-500 to-indigo-600 p-0.5 shadow-sm shadow-sky-500/20 group-hover:scale-105 transition-transform flex items-center justify-center">
+          <div class="w-full h-full bg-white rounded-[10px] flex items-center justify-center">
+            <img src="data:image/png;base64,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" alt="Logo Municipalidad Distrital de La Tinguiña" class="w-full h-full object-contain p-0.5">
+          </div>
+        </div>
+        <div>
+          <span class="font-bold text-lg tracking-tight text-slate-900 block leading-tight">La Tinguiña Digital</span>
+          <span class="text-[11px] font-medium tracking-wide uppercase text-sky-800">Municipalidad Distrital</span>
+        </div>
+      </a>
+
+      <!-- Central Navigation -->
+      <nav aria-label="Navegación principal" class="hidden md:flex items-center space-x-1 lg:space-x-2 text-[14px] font-semibold text-slate-700 gap-6">
+        <a class="nav-item-link" href="index.html">Inicio</a>
+        <a class="nav-item-link" href="transparencia.html">Transparencia</a>
+        <a class="nav-item-link" href="noticias.html">Noticias</a>
+        <a class="nav-item-link" href="contacto.html">Contacto</a>
+      </nav>
+
+      <!-- Right Action Controls -->
+      <div class="flex items-center gap-3">
+        <a class="btn-mesa-partes active px-5 py-2.5 rounded-full text-white text-sm font-semibold bg-sky-600 hover:bg-sky-700 transition-all duration-200 shadow-md shadow-sky-600/30 flex items-center gap-2 group" href="mesa-de-partes.html">
+          <span class="btn-underline">Mesa de Partes</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  
+  <!-- ==================== MAIN CONTENT: MESA DE PARTES VIRTUAL 2026 (MODAL-FIRST UX) ==================== -->
+  <main class="flex-grow w-full">
+  <div class="story" id="story" data-purpose="scroll-story">
+
+    <!-- ==================== ESCENARIO FIJO: TÍTULO + ACCIONES PRINCIPALES ==================== -->
+    <section aria-labelledby="hero-title" class="hero relative" id="hero-mesa">
+      <div class="hero-inner">
+        <div class="stage-wrap w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- 1. TÍTULO PRINCIPAL -->
+    <section class="stage-title text-center max-w-3xl mx-auto w-full">
+      <!-- Sutil elemento visual de documento digital -->
+      <div class="hero-anim inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sky-50 border border-sky-100/80 text-sky-700 text-xs font-semibold shadow-xs" style="--d:0ms">
+        <span class="material-symbols-outlined text-base text-sky-600">article</span>
+        <span>Plataforma Digital Oficial 2026</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      </div>
+
+      <!-- Título grande, moderno y fuerte -->
+      <h1 aria-label="MESA DE PARTES VIRTUAL" class="stage-h1 font-black text-slate-900 tracking-tight leading-none uppercase" id="hero-title">
+        <span aria-hidden="true" class="hero-line block" style="--dx:-8vw;--s:100ms"><span class="kw"><span class="kl" style="--i:0">M</span><span class="kl" style="--i:1">E</span><span class="kl" style="--i:2">S</span><span class="kl" style="--i:3">A</span></span> <span class="kw"><span class="kl" style="--i:4">D</span><span class="kl" style="--i:5">E</span></span> <span class="kw"><span class="kl" style="--i:6">P</span><span class="kl" style="--i:7">A</span><span class="kl" style="--i:8">R</span><span class="kl" style="--i:9">T</span><span class="kl" style="--i:10">E</span><span class="kl" style="--i:11">S</span></span></span>
+        <span aria-hidden="true" class="hero-line block" style="--dx:10vw;--s:260ms"><span class="kw"><span class="kl kl--glow" style="--i:0;color:#0284c7">V</span><span class="kl kl--glow" style="--i:1;color:#038cc9">I</span><span class="kl kl--glow" style="--i:2;color:#0395cb">R</span><span class="kl kl--glow" style="--i:3;color:#049dce">T</span><span class="kl kl--glow" style="--i:4;color:#05a5d0">U</span><span class="kl kl--glow" style="--i:5;color:#05aed2">A</span><span class="kl kl--glow" style="--i:6;color:#06b6d4">L</span></span></span>
+      </h1>
+
+      <!-- Subtítulo breve requerido -->
+      <p aria-label="Trámites y documentos en línea" class="text-lg sm:text-xl text-slate-500 font-medium">
+        <span aria-hidden="true" class="hero-line block" style="--dx:6vw;--s:420ms;--step:12ms"><span class="kw"><span class="kl" style="--i:0">T</span><span class="kl" style="--i:1">r</span><span class="kl" style="--i:2">á</span><span class="kl" style="--i:3">m</span><span class="kl" style="--i:4">i</span><span class="kl" style="--i:5">t</span><span class="kl" style="--i:6">e</span><span class="kl" style="--i:7">s</span></span> <span class="kw"><span class="kl" style="--i:8">y</span></span> <span class="kw"><span class="kl" style="--i:9">d</span><span class="kl" style="--i:10">o</span><span class="kl" style="--i:11">c</span><span class="kl" style="--i:12">u</span><span class="kl" style="--i:13">m</span><span class="kl" style="--i:14">e</span><span class="kl" style="--i:15">n</span><span class="kl" style="--i:16">t</span><span class="kl" style="--i:17">o</span><span class="kl" style="--i:18">s</span></span> <span class="kw"><span class="kl" style="--i:19">e</span><span class="kl" style="--i:20">n</span></span> <span class="kw"><span class="kl" style="--i:21">l</span><span class="kl" style="--i:22">í</span><span class="kl" style="--i:23">n</span><span class="kl" style="--i:24">e</span><span class="kl" style="--i:25">a</span></span></span>
+      </p>
+    </section>
+
+    <!-- 2. ACCIONES PRINCIPALES (DOS TARJETAS GRANDES: EL CENTRO DE ATENCIÓN DE LA PANTALLA) -->
+    <section class="stage-actions grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 w-full">
+      <!-- Tarjeta 1: REGISTRAR TRÁMITE (ABRE MODAL DE REGISTRO) -->
+      <div onclick="openModal('registrar')" class="card-action hero-anim hero-line group relative cursor-pointer p-8 sm:p-12 rounded-3xl bg-white border-2 border-slate-200/90 hover:border-sky-500 shadow-sm hover:shadow-2xl hover:shadow-sky-500/15 transition-all duration-300 flex flex-col items-center text-center" style="--dx:-5vw;--d:560ms">
+        <!-- Badge de acción rápida -->
+        <div class="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 text-sky-700 text-xs font-bold border border-sky-100">
+          <span class="material-symbols-outlined text-sm">open_in_new</span>
+          <span>Abrir formulario</span>
+        </div>
+
+        <!-- Icono de documento -->
+        <div class="card-icon rounded-3xl bg-sky-50 text-sky-600 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-sky-500 group-hover:text-white transition-all duration-300 shadow-sm">
+          <span class="material-symbols-outlined text-5xl">description</span>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-2 uppercase">REGISTRAR TRÁMITE</h2>
+        <p class="card-sub text-base text-slate-500 font-medium">Envía un documento</p>
+
+        <button type="button" class="mt-auto px-10 py-3.5 rounded-full bg-sky-600 group-hover:bg-sky-500 text-white font-extrabold text-sm shadow-md shadow-sky-600/25 transition-all flex items-center gap-2">
+          <span>Registrar</span>
+          <span class="material-symbols-outlined text-lg">arrow_forward</span>
+        </button>
+      </div>
+
+      <!-- Tarjeta 2: CONSULTAR TRÁMITE (ABRE MODAL DE CONSULTA) -->
+      <div onclick="openModal('consultar')" class="card-action hero-anim hero-line group relative cursor-pointer p-8 sm:p-12 rounded-3xl bg-white border-2 border-slate-200/90 hover:border-slate-800 shadow-sm hover:shadow-2xl hover:shadow-slate-900/15 transition-all duration-300 flex flex-col items-center text-center" style="--dx:5vw;--d:700ms">
+        <!-- Badge de acción rápida -->
+        <div class="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold border border-slate-200">
+          <span class="material-symbols-outlined text-sm">search</span>
+          <span>Búsqueda en vivo</span>
+        </div>
+
+        <!-- Icono de búsqueda -->
+        <div class="card-icon rounded-3xl bg-slate-50 text-slate-700 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-slate-900 group-hover:text-white transition-all duration-300 shadow-sm">
+          <span class="material-symbols-outlined text-5xl">search</span>
+        </div>
+
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-2 uppercase">CONSULTAR TRÁMITE</h2>
+        <p class="card-sub text-base text-slate-500 font-medium">Revisa tu expediente</p>
+
+        <button type="button" class="mt-auto px-10 py-3.5 rounded-full bg-slate-900 group-hover:bg-slate-800 text-white font-extrabold text-sm shadow-md transition-all flex items-center gap-2">
+          <span>Consultar</span>
+          <span class="material-symbols-outlined text-lg">arrow_forward</span>
+        </button>
+      </div>
+    </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- BEGIN: Requisitos e información (cortina que sube sobre el escenario) -->
+    <div class="curtain" data-purpose="mesa-content" id="mesa-curtain">
+      <div class="curtain-inner w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 space-y-12 lg:space-y-16">
+    <!-- 3. REQUISITOS (SECCIÓN PEQUEÑA: SOLAMENTE ICONOS + TEXTOS CORTOS, SIN PÁRRAFOS) -->
+    <section class="max-w-4xl mx-auto space-y-4 pt-4">
+      <div class="reveal text-center">
+        <h3 data-scrub class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight"><span class="sw">Requisitos</span></h3>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <!-- Requisito 1 -->
+        <div data-dx="-1" class="reveal p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3 text-left">
+          <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 font-bold">
+            <span class="material-symbols-outlined text-lg">check</span>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-slate-800">Documento firmado</span>
+        </div>
+
+        <!-- Requisito 2 -->
+        <div data-dx="0" class="reveal p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3 text-left">
+          <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 font-bold">
+            <span class="material-symbols-outlined text-lg">check</span>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-slate-800">DNI</span>
+        </div>
+
+        <!-- Requisito 3 -->
+        <div data-dx="0" class="reveal p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3 text-left">
+          <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 font-bold">
+            <span class="material-symbols-outlined text-lg">check</span>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-slate-800">Anexos</span>
+        </div>
+
+        <!-- Requisito 4 -->
+        <div data-dx="1" class="reveal p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3 text-left">
+          <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 font-bold">
+            <span class="material-symbols-outlined text-lg">check</span>
+          </div>
+          <span class="text-xs sm:text-sm font-bold text-slate-800">Correo y celular</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. INFORMACIÓN ÚTIL (DOS TARJETAS PEQUEÑAS) -->
+    <section class="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+      <!-- Tarjeta 1: HORARIO -->
+      <div data-dx="-1" class="reveal p-5 sm:p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-2xl">schedule</span>
+        </div>
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider text-slate-400 block">HORARIO</span>
+          <p class="text-sm font-bold text-slate-900 mt-0.5">Lun. – Vie.</p>
+          <p class="text-xs font-semibold text-slate-600">08:00 – 16:30</p>
+        </div>
+      </div>
+
+      <!-- Tarjeta 2: SOPORTE -->
+      <div data-dx="1" class="reveal p-5 sm:p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0">
+          <span class="material-symbols-outlined text-2xl">support_agent</span>
+        </div>
+        <div>
+          <span class="text-xs font-black uppercase tracking-wider text-slate-400 block">SOPORTE</span>
+          <p class="text-sm font-bold text-slate-900 mt-0.5">(056) 123-456</p>
+          <p class="text-xs font-semibold text-slate-600">Anexo 102</p>
+        </div>
+      </div>
+    </section>
+      </div>
+    </div>
+    <!-- END: cortina -->
+  </div>
+  <!-- END: story -->
+  </main>
+
+
+  <!-- ==================== MODAL 1: REGISTRAR TRÁMITE ==================== -->
+  <div id="modal-registrar" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 bg-slate-950/70 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none">
+    <div id="modal-registrar-card" class="relative w-full max-w-xl max-h-[92vh] bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden transform scale-95 transition-transform duration-300">
+      
+      <!-- Cabecera del modal -->
+      <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl">post_add</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-slate-900">Registrar Trámite</h3>
+            <p class="text-xs text-slate-500 font-medium">Envía un documento digital</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeModal('registrar')" class="w-9 h-9 rounded-full bg-white border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-all shadow-xs">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+
+      <!-- Contenido scrolleable del formulario -->
+      <div class="p-6 sm:p-8 overflow-y-auto custom-scroll space-y-6">
+        <form id="form-registro-tramite" onsubmit="handleFormSubmit(event)" class="space-y-5">
+          <!-- Campo 1: Tipo de trámite -->
+          <div class="space-y-1.5">
+            <label for="tipo_tramite" class="block text-xs font-bold uppercase tracking-wider text-slate-700">Tipo de trámite *</label>
+            <div class="relative">
+              <select id="tipo_tramite" required class="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 bg-slate-50/50 hover:bg-white text-slate-900 text-sm font-medium transition-all appearance-none outline-none pr-10 cursor-pointer">
+                <option value="" disabled selected>Selecciona el tipo de trámite</option>
+                <option value="solicitud">Solicitud General (FUT)</option>
+                <option value="licencia">Licencia de Funcionamiento</option>
+                <option value="obras">Autorización de Obras Privadas</option>
+                <option value="tributos">Consultas Tributarias y Rentas</option>
+                <option value="reclamo">Reclamo / Denuncia Administrativa</option>
+                <option value="otro">Otro trámite documentario</option>
+              </select>
+              <span class="material-symbols-outlined absolute right-3 top-3 text-slate-400 pointer-events-none">expand_more</span>
+            </div>
+          </div>
+
+          <!-- Campo 2: Nombres y apellidos -->
+          <div class="space-y-1.5">
+            <label for="nombres_apellidos" class="block text-xs font-bold uppercase tracking-wider text-slate-700">Nombres y apellidos *</label>
+            <input type="text" id="nombres_apellidos" required placeholder="Nombres y apellidos completos" class="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 bg-slate-50/50 hover:bg-white text-slate-900 text-sm font-medium transition-all outline-none">
+          </div>
+
+          <!-- Dos columnas: Correo y Teléfono -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Campo 3: Correo -->
+            <div class="space-y-1.5">
+              <label for="correo" class="block text-xs font-bold uppercase tracking-wider text-slate-700">Correo *</label>
+              <input type="email" id="correo" required placeholder="correo@ejemplo.com" class="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 bg-slate-50/50 hover:bg-white text-slate-900 text-sm font-medium transition-all outline-none">
+            </div>
+
+            <!-- Campo 4: Teléfono -->
+            <div class="space-y-1.5">
+              <label for="telefono" class="block text-xs font-bold uppercase tracking-wider text-slate-700">Teléfono *</label>
+              <input type="tel" id="telefono" required placeholder="956 123 456" class="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 bg-slate-50/50 hover:bg-white text-slate-900 text-sm font-medium transition-all outline-none">
+            </div>
+          </div>
+
+          <!-- Campo 5: Documento -->
+          <div class="space-y-1.5">
+            <label for="documento_identidad" class="block text-xs font-bold uppercase tracking-wider text-slate-700">Documento *</label>
+            <input type="text" id="documento_identidad" required placeholder="Número de DNI o RUC" class="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 bg-slate-50/50 hover:bg-white text-slate-900 text-sm font-medium transition-all outline-none">
+          </div>
+
+          <!-- Zona Drag and Drop PDF -->
+          <div class="space-y-1.5 pt-1">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">Documento PDF *</label>
+            <div id="pdf-dropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)" onclick="document.getElementById('file-input').click()" class="relative border-2 border-dashed border-slate-300 hover:border-sky-500 bg-slate-50/80 hover:bg-sky-50/30 rounded-2xl p-6 text-center transition-all cursor-pointer flex flex-col items-center justify-center group">
+              <input type="file" id="file-input" accept=".pdf" onchange="handleFileSelected(event)" class="hidden">
+              
+              <div id="dropzone-default" class="flex flex-col items-center space-y-2">
+                <div class="w-12 h-12 rounded-2xl bg-white shadow-xs border border-slate-200 text-slate-400 group-hover:text-sky-600 group-hover:border-sky-300 flex items-center justify-center transition-all">
+                  <span class="material-symbols-outlined text-2xl">upload_file</span>
+                </div>
+                <div>
+                  <p class="text-sm font-bold text-slate-800">Arrastra tu PDF aquí</p>
+                  <p class="text-xs text-slate-400 font-semibold">Máximo 10 MB</p>
+                </div>
+              </div>
+
+              <!-- Archivo cargado -->
+              <div id="dropzone-file-info" class="hidden flex-col items-center space-y-2">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center">
+                  <span class="material-symbols-outlined text-2xl">picture_as_pdf</span>
+                </div>
+                <div>
+                  <p id="file-name-display" class="text-xs font-bold text-slate-800 max-w-xs truncate">documento.pdf</p>
+                  <p id="file-size-display" class="text-[11px] text-emerald-600 font-semibold">Listo para enviar</p>
+                </div>
+                <button type="button" onclick="removeSelectedFile(event)" class="text-xs text-rose-600 hover:text-rose-700 font-bold underline">
+                  Cambiar archivo
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón principal de envío -->
+          <div class="pt-2">
+            <button type="submit" id="btn-enviar-tramite" class="w-full h-12 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm shadow-md shadow-sky-600/25 transition-all flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-lg">send</span>
+              <span>Enviar trámite</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Estado de éxito al registrar (oculto inicialmente) -->
+        <div id="registro-exito" class="hidden flex-col items-center text-center space-y-5 py-4">
+          <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shadow-sm">
+            <span class="material-symbols-outlined text-3xl">check_circle</span>
+          </div>
+
+          <div class="space-y-1">
+            <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider border border-emerald-200">Trámite registrado</span>
+            <h4 class="text-xl font-black text-slate-900 pt-1">Documento ingresado con éxito</h4>
+            <p class="text-xs text-slate-500">Usa este código para realizar el seguimiento</p>
+          </div>
+
+          <!-- Código del ticket -->
+          <div class="w-full p-5 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-1.5">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Número de expediente</span>
+            <div class="flex items-center justify-center gap-2">
+              <span id="ticket-generado" class="text-2xl font-black font-mono text-sky-600 tracking-wider">EXP-2026-48912</span>
+              <button type="button" onclick="copiarExpedienteGenerado()" class="w-8 h-8 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 flex items-center justify-center transition-all shadow-xs" title="Copiar">
+                <span class="material-symbols-outlined text-base">content_copy</span>
+              </button>
+            </div>
+            <p class="text-[11px] text-slate-400">Fecha: <span id="fecha-generada">Hoy</span></p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row gap-2.5 w-full pt-1">
+            <button type="button" onclick="irAConsultarConExpediente()" class="flex-1 h-11 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-sm transition-all flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-base">search</span>
+              <span>Consultar este expediente</span>
+            </button>
+            <button type="button" onclick="reiniciarRegistro()" class="px-4 h-11 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-all">
+              Registrar otro
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: CONSULTAR TRÁMITE ==================== -->
+  <div id="modal-consultar" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 bg-slate-950/70 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none">
+    <div id="modal-consultar-card" class="relative w-full max-w-xl max-h-[92vh] bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col overflow-hidden transform scale-95 transition-transform duration-300">
+      
+      <!-- Cabecera del modal -->
+      <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl">manage_search</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-slate-900">Consulta tu trámite</h3>
+            <p class="text-xs text-slate-500 font-medium">Revisa el estado de tu expediente</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeModal('consultar')" class="w-9 h-9 rounded-full bg-white border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-all shadow-xs">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+
+      <!-- Contenido del modal de consulta -->
+      <div class="p-6 sm:p-8 overflow-y-auto custom-scroll space-y-6">
+        <!-- Formulario de búsqueda -->
+        <form onsubmit="handleConsultaSubmit(event)" class="space-y-3">
+          <div class="space-y-1.5">
+            <label for="num_expediente" class="block text-xs font-bold uppercase tracking-wider text-slate-700">Número de expediente *</label>
+            <div class="flex flex-col sm:flex-row gap-2.5">
+              <div class="relative flex-grow">
+                <input type="text" id="num_expediente" required placeholder="Ej. EXP-2026-04218" value="EXP-2026-04218" class="w-full h-12 px-4 pl-11 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 bg-slate-50/50 hover:bg-white text-slate-900 font-mono font-bold text-sm transition-all outline-none uppercase">
+                <span class="material-symbols-outlined absolute left-3.5 top-3 text-slate-400 text-xl">search</span>
+              </div>
+              <button type="submit" id="btn-ejecutar-consulta" class="h-12 px-6 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm shadow-md shadow-sky-600/25 transition-all flex items-center justify-center gap-1.5 flex-shrink-0">
+                <span class="material-symbols-outlined text-lg">search</span>
+                <span>Consultar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Accesos rápidos a números de prueba -->
+          <div class="flex items-center gap-2 pt-0.5 text-[11px] text-slate-400">
+            <span>Ejemplos:</span>
+            <button type="button" onclick="cargarEjemploExpediente('EXP-2026-04218', 2)" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-sky-100 hover:text-sky-700 font-mono font-semibold transition-colors">
+              EXP-2026-04218
+            </button>
+            <button type="button" onclick="cargarEjemploExpediente('EXP-2026-08150', 3)" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-emerald-100 hover:text-emerald-700 font-mono font-semibold transition-colors">
+              EXP-2026-08150
+            </button>
+          </div>
+        </form>
+
+        <!-- RESULTADO VISUAL: RECIBIDO → EN REVISIÓN → ATENDIDO -->
+        <div id="resultado-consulta" class="pt-2 space-y-5">
+          <!-- Cabecera de estado -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Expediente Oficial</span>
+              <span id="expediente-actual-titulo" class="text-base font-black font-mono text-slate-900">EXP-2026-04218</span>
+            </div>
+            <div id="badge-estado-general" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold">
+              <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              <span id="texto-estado-general">En revisión</span>
+            </div>
+          </div>
+
+          <!-- PIPELINE VISUAL DIRECTO Y ELEGANTE -->
+          <div class="py-6 px-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs">
+            <div class="relative flex items-center justify-between">
+              <!-- Barra conectora de fondo -->
+              <div class="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-1.5 bg-slate-200 z-0"></div>
+              <!-- Barra conectora de progreso activa -->
+              <div id="pipeline-progress-bar" class="absolute left-6 top-1/2 -translate-y-1/2 h-1.5 bg-sky-500 z-0 transition-all duration-500" style="width: 50%;"></div>
+
+              <!-- Paso 1: RECIBIDO -->
+              <div class="relative z-10 flex flex-col items-center">
+                <div id="step-node-1" class="w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold shadow-md shadow-sky-500/25 transition-all">
+                  <span class="material-symbols-outlined text-xl">check</span>
+                </div>
+                <span class="mt-2 text-xs font-black text-slate-900 uppercase tracking-wider">RECIBIDO</span>
+              </div>
+
+              <!-- Paso 2: EN REVISIÓN -->
+              <div class="relative z-10 flex flex-col items-center">
+                <div id="step-node-2" class="w-10 h-10 rounded-full bg-sky-500 text-white ring-4 ring-sky-100 flex items-center justify-center font-bold shadow-md shadow-sky-500/25 transition-all animate-pulse">
+                  <span class="material-symbols-outlined text-xl">pending</span>
+                </div>
+                <span class="mt-2 text-xs font-black text-sky-600 uppercase tracking-wider">EN REVISIÓN</span>
+              </div>
+
+              <!-- Paso 3: ATENDIDO -->
+              <div class="relative z-10 flex flex-col items-center">
+                <div id="step-node-3" class="w-10 h-10 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center font-bold transition-all">
+                  <span class="material-symbols-outlined text-xl">task_alt</span>
+                </div>
+                <span class="mt-2 text-xs font-black text-slate-400 uppercase tracking-wider">ATENDIDO</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== FOOTER (mismo del Home: una sola línea) ==================== -->
+  <footer class="border-t border-slate-200 bg-slate-100 py-3 text-center text-xs text-slate-500 mt-auto" data-purpose="site-footer">
+    <p class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">© 2026 Municipalidad Distrital de La Tinguiña</p>
+  </footer>
+
+
+  
+  <script>
+    let selectedFile = null;
+
+    // Toast flotante
+    function showToast(msg) {
+      let toast = document.getElementById('toast-notification');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast-notification';
+        toast.className = 'fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 text-xs font-semibold flex items-center gap-2 transition-all duration-300 transform translate-y-10 opacity-0 pointer-events-none';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span> <span>${msg}</span>`;
+      toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+
+    // Control de Modales
+    function openModal(tipo) {
+      const modal = document.getElementById(`modal-${tipo}`);
+      const card = document.getElementById(`modal-${tipo}-card`);
+      if (modal && card) {
+        modal.classList.remove('hidden', 'pointer-events-none');
+        modal.classList.add('flex');
+        document.body.classList.add('overflow-hidden');
+        setTimeout(() => {
+          modal.classList.remove('opacity-0');
+          card.classList.remove('scale-95');
+          card.classList.add('scale-100');
+        }, 10);
+      }
+    }
+
+    function closeModal(tipo) {
+      const modal = document.getElementById(`modal-${tipo}`);
+      const card = document.getElementById(`modal-${tipo}-card`);
+      if (modal && card) {
+        modal.classList.add('opacity-0');
+        card.classList.remove('scale-100');
+        card.classList.add('scale-95');
+        setTimeout(() => {
+          modal.classList.add('hidden', 'pointer-events-none');
+          modal.classList.remove('flex');
+          document.body.classList.remove('overflow-hidden');
+        }, 250);
+      }
+    }
+
+    // Cerrar al presionar Escape o hacer click en el fondo oscuro
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal('registrar');
+        closeModal('consultar');
+      }
+    });
+
+    ['modal-registrar', 'modal-consultar'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('click', (e) => {
+          if (e.target === el) {
+            closeModal(id.replace('modal-', ''));
+          }
+        });
+      }
+    });
+
+    // Manejo Drag and Drop para PDF
+    function handleDragOver(e) {
+      e.preventDefault();
+      document.getElementById('pdf-dropzone').classList.add('border-sky-500', 'bg-sky-50/50');
+    }
+
+    function handleDragLeave(e) {
+      e.preventDefault();
+      document.getElementById('pdf-dropzone').classList.remove('border-sky-500', 'bg-sky-50/50');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById('pdf-dropzone').classList.remove('border-sky-500', 'bg-sky-50/50');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        processFile(e.dataTransfer.files[0]);
+      }
+    }
+
+    function handleFileSelected(e) {
+      if (e.target.files && e.target.files.length > 0) {
+        processFile(e.target.files[0]);
+      }
+    }
+
+    function processFile(file) {
+      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Por favor selecciona únicamente archivos en formato PDF.');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        alert('El archivo excede el tamaño máximo permitido de 10 MB.');
+        return;
+      }
+      selectedFile = file;
+      document.getElementById('dropzone-default').classList.add('hidden');
+      document.getElementById('dropzone-file-info').classList.remove('hidden');
+      document.getElementById('dropzone-file-info').classList.add('flex');
+      document.getElementById('file-name-display').textContent = file.name;
+      const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
+      document.getElementById('file-size-display').textContent = `${sizeMb} MB · Listo para enviar`;
+      showToast('Archivo PDF cargado correctamente');
+    }
+
+    function removeSelectedFile(e) {
+      e.stopPropagation();
+      selectedFile = null;
+      document.getElementById('file-input').value = '';
+      document.getElementById('dropzone-file-info').classList.add('hidden');
+      document.getElementById('dropzone-file-info').classList.remove('flex');
+      document.getElementById('dropzone-default').classList.remove('hidden');
+    }
+
+    // Envío del formulario de registro
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      if (!selectedFile) {
+        showToast('Por favor adjunta tu documento en formato PDF');
+        document.getElementById('pdf-dropzone').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('pdf-dropzone').classList.add('border-rose-400');
+        setTimeout(() => document.getElementById('pdf-dropzone').classList.remove('border-rose-400'), 2000);
+        return;
+      }
+
+      const btn = document.getElementById('btn-enviar-tramite');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="inline-block animate-spin mr-2">◌</span><span>Registrando documento...</span>';
+
+      setTimeout(() => {
+        const ticketNum = 'EXP-2026-' + Math.floor(10000 + Math.random() * 90000);
+        document.getElementById('ticket-generado').textContent = ticketNum;
+        
+        const now = new Date();
+        const opciones = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+        document.getElementById('fecha-generada').textContent = now.toLocaleDateString('es-PE', opciones);
+
+        document.getElementById('form-registro-tramite').classList.add('hidden');
+        document.getElementById('registro-exito').classList.remove('hidden');
+        document.getElementById('registro-exito').classList.add('flex');
+
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        showToast('¡Trámite registrado! Código: ' + ticketNum);
+      }, 700);
+    }
+
+    function copiarExpedienteGenerado() {
+      const code = document.getElementById('ticket-generado').textContent;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(code);
+      }
+      showToast('Número de expediente copiado: ' + code);
+    }
+
+    function irAConsultarConExpediente() {
+      const code = document.getElementById('ticket-generado').textContent;
+      closeModal('registrar');
+      setTimeout(() => {
+        document.getElementById('num_expediente').value = code;
+        openModal('consultar');
+        actualizarPipelineResultado(code, 1);
+      }, 300);
+    }
+
+    function reiniciarRegistro() {
+      document.getElementById('form-registro-tramite').reset();
+      removeSelectedFile({ stopPropagation: () => {} });
+      document.getElementById('form-registro-tramite').classList.remove('hidden');
+      document.getElementById('registro-exito').classList.add('hidden');
+      document.getElementById('registro-exito').classList.remove('flex');
+    }
+
+    // Consulta de Expediente
+    function handleConsultaSubmit(e) {
+      e.preventDefault();
+      const code = document.getElementById('num_expediente').value.trim().toUpperCase();
+      if (!code) return;
+
+      const btn = document.getElementById('btn-ejecutar-consulta');
+      const orig = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="inline-block animate-spin mr-2">◌</span>';
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = orig;
+        let step = 2;
+        if (code.endsWith('0') || code.endsWith('5')) step = 3;
+        else if (code.endsWith('1') || code.endsWith('3')) step = 1;
+        
+        actualizarPipelineResultado(code, step);
+        showToast('Expediente ' + code + ' consultado');
+      }, 400);
+    }
+
+    function cargarEjemploExpediente(code, step) {
+      document.getElementById('num_expediente').value = code;
+      actualizarPipelineResultado(code, step);
+    }
+
+    function actualizarPipelineResultado(code, step) {
+      document.getElementById('expediente-actual-titulo').textContent = code;
+      const bar = document.getElementById('pipeline-progress-bar');
+      const s1 = document.getElementById('step-node-1');
+      const s2 = document.getElementById('step-node-2');
+      const s3 = document.getElementById('step-node-3');
+      const badge = document.getElementById('badge-estado-general');
+      const texto = document.getElementById('texto-estado-general');
+
+      if (step === 1) {
+        bar.style.width = '0%';
+        s1.className = "w-10 h-10 rounded-full bg-sky-500 text-white ring-4 ring-sky-100 flex items-center justify-center font-bold shadow-md shadow-sky-500/25 transition-all animate-pulse";
+        s2.className = "w-10 h-10 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center font-bold transition-all";
+        s3.className = "w-10 h-10 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center font-bold transition-all";
+        badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-bold";
+        texto.textContent = "Recibido";
+      } else if (step === 2) {
+        bar.style.width = '50%';
+        s1.className = "w-10 h-10 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold shadow-md shadow-sky-500/25 transition-all";
+        s2.className = "w-10 h-10 rounded-full bg-sky-500 text-white ring-4 ring-sky-100 flex items-center justify-center font-bold shadow-md shadow-sky-500/25 transition-all animate-pulse";
+        s3.className = "w-10 h-10 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center font-bold transition-all";
+        badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold";
+        texto.textContent = "En revisión";
+      } else {
+        bar.style.width = '100%';
+        s1.className = "w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold shadow-md shadow-emerald-500/25 transition-all";
+        s2.className = "w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold shadow-md shadow-emerald-500/25 transition-all";
+        s3.className = "w-10 h-10 rounded-full bg-emerald-500 text-white ring-4 ring-emerald-100 flex items-center justify-center font-bold shadow-md shadow-emerald-500/25 transition-all";
+        badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold";
+        texto.textContent = "Atendido";
+      }
+    }
+  </script>
+
+  <script data-purpose="scroll-storytelling">
+  (function () {
+    'use strict';
+
+    var story = document.getElementById('story');
+    var hero = document.getElementById('hero-mesa');
+    if (!story || !hero) return;
+
+    function mql(q) { return window.matchMedia ? window.matchMedia(q) : { matches: false }; }
+    function listen(m, fn) {
+      if (m.addEventListener) m.addEventListener('change', fn);
+      else if (m.addListener) m.addListener(fn);
+    }
+    function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+    var reduceMotion = mql('(prefers-reduced-motion: reduce)');
+    var pinMQ = mql('(min-height: 601px) and (prefers-reduced-motion: no-preference)');
+
+    /* ---------- Progreso del scroll → --p (0..1) ---------- */
+    var heroH = 1, lastP = -1, covered = false, ticking = false, dir = 1, lastDir = 1, lastY = 0, pEff = 0, pTarget = 0, easing = false, lastT = 0, lifted = false;
+
+    function isPinned() { return pinMQ.matches && !story.classList.contains('is-static'); }
+
+    function setCovered(c) {
+      if (c === covered) return;
+      covered = c;
+      hero.classList.toggle('is-covered', c);
+    }
+    function setLifted(v) {
+      if (v === lifted) return;
+      lifted = v;
+      story.classList.toggle('is-lifted', v);
+    }
+
+    /* ---------- Los efectos se adelantan al scroll (también al volver) ----------
+       Al bajar, el progreso visual va por delante del scroll real; al subir va por detrás, así el
+       Hero reaparece antes. El valor se suaviza para que no haya saltos al cambiar de dirección. */
+    var LEAD_DOWN = 1.8, LEAD_UP = 2.3;
+    function targetFor(p) { return dir >= 0 ? 1 - Math.pow(1 - p, LEAD_DOWN) : Math.pow(p, LEAD_UP); }
+    function step(ts) {
+      var dt = Math.min(Math.max(ts - lastT, 0), 64);
+      lastT = ts;
+      pEff += (pTarget - pEff) * (1 - Math.exp(-dt / 90));
+      if (Math.abs(pTarget - pEff) < 0.004) { pEff = pTarget; easing = false; }
+      hero.style.setProperty('--p', pEff.toFixed(3));
+      if (easing) window.requestAnimationFrame(step);
+    }
+    function easeTo(target, snap) {
+      pTarget = target;
+      if (snap) { pEff = target; easing = false; hero.style.setProperty('--p', pEff.toFixed(3)); return; }
+      if (!easing) { easing = true; lastT = performance.now(); window.requestAnimationFrame(step); }
+    }
+
+    function update(force) {
+      ticking = false;
+      if (!isPinned()) {
+        if (force || lastP !== 0) { hero.style.setProperty('--p', '0'); lastP = 0; pEff = 0; pTarget = 0; easing = false; }
+        setCovered(false);
+        setLifted(false);
+        return;
+      }
+      var y = window.pageYOffset;
+      if (y > lastY + 0.5) dir = 1; else if (y < lastY - 0.5) dir = -1;
+      lastY = y;
+      var p = Math.min(Math.max(y / heroH, 0), 1);
+      if (!force && p === lastP && dir === lastDir) return;
+      lastP = p; lastDir = dir;
+      easeTo(targetFor(p), force);
+      setCovered(p >= 0.999);
+      setLifted(p > 0.002);
+    }
+
+    /* ---------- Desvanecido por posición ----------
+       Lo que va saliendo por arriba (bajo el header) o por abajo del viewport se desvanece en
+       proporción a lo que ya se ocultó, y lo que entra aparece igual de gradual. Solo cambia
+       opacity (y translate en las tarjetas); con movimiento reducido o sin JS todo queda visible. */
+    var fadeEls = reduceMotion.matches ? [] : Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+    var fadeLast = [];
+    var fadeDx = fadeEls.map(function (el) { return el.hasAttribute('data-dx') ? parseFloat(el.getAttribute('data-dx')) : null; });
+    var headerEl = document.querySelector('header');
+
+    function fade() {
+      if (!fadeEls.length) return;
+      var vh = window.innerHeight;
+      var top = headerEl ? headerEl.getBoundingClientRect().bottom : 0;
+      var maxZone = 300;                                    // máx. tramo de desvanecido (px)
+      var remaining = document.documentElement.scrollHeight - (window.pageYOffset + vh);
+      var bottom = vh + maxZone * (1 - clamp01(remaining / maxZone)); // al final de la página nada se desvanece
+      var vals = [], i, r, zone, o;
+      for (i = 0; i < fadeEls.length; i++) {                // 1) leer
+        if (fadeEls[i].offsetParent === null) { vals.push(null); continue; }
+        r = fadeEls[i].getBoundingClientRect();
+        zone = Math.max(Math.min(r.height, 420) * 0.9, 1); // proporcional al tamaño: se desvanece a medida que se oculta
+        o = clamp01((r.bottom - top) / zone) * clamp01((bottom - r.top) / zone);
+        vals.push(o * o * (3 - 2 * o));
+      }
+      for (i = 0; i < fadeEls.length; i++) {                // 2) escribir
+        o = vals[i];
+        if (o === null) continue;
+        if (o > 0.995) o = 1;
+        if (o === fadeLast[i]) continue;
+        fadeLast[i] = o;
+        fadeEls[i].style.opacity = o === 1 ? '' : o.toFixed(3);
+        if (fadeDx[i] !== null) { // tarjetas: entran/salen deslizándose desde su costado (las centrales, desde abajo)
+          fadeEls[i].style.translate = o === 1 ? '' :
+            (fadeDx[i] * (1 - o) * 72).toFixed(1) + 'px ' + (fadeDx[i] === 0 ? ((1 - o) * 48).toFixed(1) : '0') + 'px';
+        }
+      }
+    }
+
+    /* ---------- Palabra del título "Requisitos" que se enciende con el scroll (y se apaga al subir) ---------- */
+    var scrubBlocks = reduceMotion.matches ? [] : Array.prototype.map.call(document.querySelectorAll('[data-scrub]'), function (el) {
+      return { el: el, words: Array.prototype.slice.call(el.querySelectorAll('.sw')), last: -1 };
+    });
+    function scrub() {
+      var vh = window.innerHeight, b, i, n, t, blk;
+      for (b = 0; b < scrubBlocks.length; b++) {
+        blk = scrubBlocks[b];
+        t = clamp01((vh - blk.el.getBoundingClientRect().top) / (vh * 0.56));
+        if (t === blk.last) continue;
+        blk.last = t;
+        n = blk.words.length;
+        for (i = 0; i < n; i++) blk.words[i].style.setProperty('--w', clamp01((t * (n + 6) - i) / 6).toFixed(3));
+      }
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () { update(false); fade(); scrub(); });
+    }
+
+    /* El escenario solo se fija si cabe en una pantalla (texto agrandado, pantallas muy bajas: no se fija). */
+    function measure() {
+      story.classList.remove('is-static');
+      if (pinMQ.matches) {
+        // offsetHeight ignora transformaciones, así que no le afectan las animaciones de entrada
+        var pinnedH = hero.offsetHeight;                // alto fijado por CSS (pantalla - header)
+        story.classList.add('is-static');
+        var naturalH = hero.offsetHeight;               // alto que ocupa el contenido sin fijar
+        story.classList.remove('is-static');
+        if (naturalH > pinnedH + 1) story.classList.add('is-static');
+      }
+      heroH = Math.max(hero.offsetHeight, 1);
+      update(true);
+      fade();
+      scrub();
+    }
+
+    var resizeQueued = false;
+    function onResize() {
+      if (resizeQueued) return;
+      resizeQueued = true;
+      window.requestAnimationFrame(function () { resizeQueued = false; measure(); });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+    window.addEventListener('load', measure);
+    window.addEventListener('pageshow', measure);
+    listen(pinMQ, measure);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    measure();
+  })();
+  </script>
+</body>
+</html>
